@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pricing — TORONGO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #f7f5f0; --surface: #ffffff; --border: #e5e0d8; --accent: #2d6a4f; --text: #2c2c2c; --muted: #8a8178; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; line-height: 1.7; }
+    nav { position: fixed; top:0; left:0; right:0; z-index:100; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); background:rgba(247,245,240,0.95); backdrop-filter:blur(12px); }
+    .logo { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:var(--accent); letter-spacing:-0.5px; text-decoration:none; display:block; }
+    .logo span { color:var(--muted); font-weight:400; font-size:11px; display:block; letter-spacing:2px; text-transform:uppercase; }
+    nav ul { list-style:none; display:flex; gap:32px; }
+    nav ul a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:1px; text-transform:uppercase; transition:color 0.2s; }
+    nav ul a:hover { color:var(--accent); }
+    .page { max-width:1100px; margin:0 auto; padding:120px 40px 80px; }
+    .page-label { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+    h1 { font-family:'Syne',sans-serif; font-size:56px; font-weight:800; color:#111; letter-spacing:-2px; line-height:1.05; margin-bottom:16px; }
+    .subtitle { color:var(--muted); font-size:15px; line-height:1.8; max-width:520px; margin-bottom:64px; }
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+    .plan { background:#fff; padding:48px 40px; position:relative; }
+    .plan-dark { background:#1b4332; }
+    .plan-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:16px; }
+    .plan-dark .plan-label { color:#c8f55a; }
+    .plan-price { font-family:'Syne',sans-serif; font-size:52px; font-weight:800; color:#111; line-height:1; margin-bottom:6px; }
+    .plan-dark .plan-price { color:#fff; }
+    .plan-range { font-size:20px; color:var(--muted); }
+    .plan-dark .plan-range { color:rgba(255,255,255,0.4); }
+    .plan-unit { font-size:12px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; margin-bottom:32px; }
+    .plan-dark .plan-unit { color:rgba(255,255,255,0.4); }
+    .plan-divider { border:none; border-top:1px solid var(--border); margin-bottom:28px; }
+    .plan-dark .plan-divider { border-color:rgba(255,255,255,0.15); }
+    .feature { display:flex; align-items:flex-start; gap:12px; font-size:13px; color:#444; margin-bottom:14px; }
+    .plan-dark .feature { color:rgba(255,255,255,0.8); }
+    .feature-icon { color:var(--accent); font-size:15px; flex-shrink:0; margin-top:1px; }
+    .plan-dark .feature-icon { color:#c8f55a; }
+    .feature-na { color:#bbb; }
+    .plan-dark .feature-na { color:rgba(255,255,255,0.25); }
+    .btn { display:block; text-align:center; padding:15px; font-family:'Syne',sans-serif; font-weight:700; font-size:13px; letter-spacing:1px; text-transform:uppercase; text-decoration:none; margin-top:36px; transition:all 0.2s; }
+    .btn-green { background:var(--accent); color:#fff; }
+    .btn-green:hover { background:#1b4332; }
+    .btn-lime { background:#c8f55a; color:#0a0a0a; }
+    .btn-lime:hover { background:#d4ff60; }
+    .btn-outline { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+    .btn-outline:hover { background:var(--accent); color:#fff; }
+    .badge { position:absolute; top:20px; right:20px; background:#c8f55a; color:#0a0a0a; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:4px 10px; }
+    .guarantee { margin-top:1px; background:#fff; border:1px solid var(--border); border-top:none; padding:28px 40px; display:flex; gap:48px; align-items:center; flex-wrap:wrap; }
+    .g-item { display:flex; align-items:center; gap:10px; font-size:13px; color:#444; }
+    .g-icon { color:var(--accent); font-size:16px; }
+    .compare { margin-top:80px; }
+    .compare h2 { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; color:#111; letter-spacing:-1px; margin-bottom:32px; }
+    table { width:100%; border-collapse:collapse; border:1px solid var(--border); background:#fff; }
+    th { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; color:#111; padding:20px 24px; text-align:left; border-bottom:1px solid var(--border); background:#f7f5f0; }
+    th:first-child { width:40%; }
+    td { padding:16px 24px; font-size:13px; color:var(--muted); border-bottom:1px solid var(--border); }
+    td:first-child { color:#333; font-weight:500; }
+    tr:last-child td { border-bottom:none; }
+    .check { color:var(--accent); font-size:16px; }
+    .cross { color:#ccc; }
+    footer { background:#ede9e2; border-top:1px solid var(--border); padding:32px 40px; display:flex; justify-content:space-between; align-items:center; margin-top:80px; }
+    footer p { font-size:12px; color:var(--muted); }
+    footer nav { display:flex; }
+    footer nav ul { gap:24px; list-style:none; display:flex; }
+    footer nav ul a { font-size:11px; color:var(--muted); text-decoration:none; letter-spacing:1px; text-transform:uppercase; }
+    footer nav ul a:hover { color:var(--accent); }
+    @media(max-width:768px) { nav { padding:16px 20px; } nav ul { gap:16px; } .page { padding:100px 20px 60px; } h1 { font-size:36px; } .pricing-grid { grid-template-columns:1fr; } .guarantee { gap:20px; } table { font-size:12px; } th, td { padding:12px 16px; } footer { flex-direction:column; gap:16px; } }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="logo" href="index.html">TORONGO <span>Digital Products</span></a>
+    <ul>
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="terms.html">Terms</a></li>
+      <li><a href="privacy.html">Privacy</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <p class="page-label">Pricing</p>
+    <h1>Simple, Transparent<br/>Pricing.</h1>
+    <p class="subtitle">Every site passes a rigorous quality gate before listing. You pay for a finished, deployable product — not a prototype. Payments processed securely via Paddle.</p>
+
+    <!-- PRICING CARDS -->
+    <div class="pricing-grid">
+
+      <!-- FAST TRACK -->
+      <div class="plan">
+        <div class="plan-label">Fast Track</div>
+        <div class="plan-price">$700<span class="plan-range">–$1,100</span></div>
+        <div class="plan-unit">Per Site</div>
+        <hr class="plan-divider"/>
+        <div class="feature"><span class="feature-icon">✓</span> Pre-built utility tool (rebranded)</div>
+        <div class="feature"><span class="feature-icon">✓</span> 7–9 day build cycle</div>
+        <div class="feature"><span class="feature-icon">✓</span> Quality score 70+/100 guaranteed</div>
+        <div class="feature"><span class="feature-icon">✓</span> Full source code + deployment docs</div>
+        <div class="feature"><span class="feature-icon">✓</span> GA4 analytics + traffic data</div>
+        <div class="feature"><span class="feature-icon">✓</span> Domain + DNS transfer</div>
+        <div class="feature"><span class="feature-icon">✓</span> 7-day post-sale support</div>
+        <div class="feature"><span class="feature-icon">✓</span> 5 negotiation templates included</div>
+        <div class="feature feature-na"><span class="cross">—</span> Custom-built from scratch</div>
+        <a href="index.html#contact" class="btn btn-green">Inquire Now</a>
+      </div>
+
+      <!-- PREMIUM TRACK -->
+      <div class="plan plan-dark">
+        <div class="badge">Most Valuable</div>
+        <div class="plan-label">Premium Track</div>
+        <div class="plan-price">$1,400<span class="plan-range">–$2,200</span></div>
+        <div class="plan-unit">Per Site</div>
+        <hr class="plan-divider"/>
+        <div class="feature"><span class="feature-icon">✓</span> Custom-built from scratch</div>
+        <div class="feature"><span class="feature-icon">✓</span> 12–14 day build cycle</div>
+        <div class="feature"><span class="feature-icon">✓</span> Quality score 85+/100 guaranteed</div>
+        <div class="feature"><span class="feature-icon">✓</span> Deep niche research + gap analysis</div>
+        <div class="feature"><span class="feature-icon">✓</span> Full source code + deployment docs</div>
+        <div class="feature"><span class="feature-icon">✓</span> GA4 analytics + traffic data</div>
+        <div class="feature"><span class="feature-icon">✓</span> Domain + DNS transfer</div>
+        <div class="feature"><span class="feature-icon">✓</span> 7-day post-sale support</div>
+        <div class="feature"><span class="feature-icon">✓</span> 5 negotiation templates included</div>
+        <a href="index.html#contact" class="btn btn-lime">Inquire Now</a>
+      </div>
+
+      <!-- SOURCE CODE BUNDLE -->
+      <div class="plan">
+        <div class="plan-label">Add-On Bundle</div>
+        <div class="plan-price">+$200<span class="plan-range">–$400</span></div>
+        <div class="plan-unit">Source Code Bundle</div>
+        <hr class="plan-divider"/>
+        <div class="feature"><span class="feature-icon">✓</span> Template license (single commercial use)</div>
+        <div class="feature"><span class="feature-icon">✓</span> Complete codebase access</div>
+        <div class="feature"><span class="feature-icon">✓</span> Rebrand & resell rights</div>
+        <div class="feature"><span class="feature-icon">✓</span> Full developer documentation</div>
+        <div class="feature"><span class="feature-icon">✓</span> Available with any track</div>
+        <div class="feature feature-na"><span class="cross">—</span> No template redistribution</div>
+        <div class="feature feature-na"><span class="cross">—</span> No sublicensing</div>
+        <div class="feature feature-na"><span class="cross">—</span> Single buyer only</div>
+        <a href="index.html#contact" class="btn btn-outline">Add to Order</a>
+      </div>
+
+    </div>
+
+    <!-- GUARANTEE BAR -->
+    <div class="guarantee">
+      <div class="g-item"><span class="g-icon">✓</span> <strong>Quality Gate:</strong> &nbsp;70+/100 score required — zero exceptions.</div>
+      <div class="g-item"><span class="g-icon">✓</span> <strong>Secure Payment:</strong> &nbsp;Via Paddle — encrypted & protected.</div>
+      <div class="g-item"><span class="g-icon">✓</span> <strong>48hr Handover:</strong> &nbsp;Full transfer within 48 hours of payment.</div>
+      <div class="g-item"><span class="g-icon">✓</span> <strong>Refund Policy:</strong> &nbsp;If we fail to deliver within 14 days.</div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="compare">
+      <h2>Track Comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Fast Track</th>
+            <th>Premium Track</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Price range</td><td>$700 – $1,100</td><td>$1,400 – $2,200</td></tr>
+          <tr><td>Build time</td><td>7–9 days</td><td>12–14 days</td></tr>
+          <tr><td>Build method</td><td>Pre-built template (rebranded)</td><td>Custom from scratch</td></tr>
+          <tr><td>Minimum quality score</td><td>70/100</td><td>85/100</td></tr>
+          <tr><td>Niche research</td><td>Standard</td><td>Deep (Reddit + competitor gap)</td></tr>
+          <tr><td>Source code included</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>GA4 analytics data</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Domain + DNS transfer</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>7-day post-sale support</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Available from</td><td>Month 1</td><td>Month 3+</td></tr>
+          <tr><td>Est. sale probability</td><td>68%</td><td>55%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 TORONGO — RT Trading, Narayanganj, Bangladesh.</p>
+    <nav>
+      <ul>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+        <li><a href="refund.html">Refund</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </footer>
+</body>
+</html>
