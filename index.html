@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TORONGO — Niche Web Products</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --accent: #c8f55a;
+      --accent-dim: #8aab30;
+      --text: #e8e8e8;
+      --muted: #666;
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .logo span { color: var(--muted); font-weight: 400; font-size: 11px; display: block; letter-spacing: 2px; text-transform: uppercase; }
+
+    nav ul { list-style: none; display: flex; gap: 32px; }
+    nav ul a { color: var(--muted); text-decoration: none; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; transition: color 0.2s; }
+    nav ul a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,245,90,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,245,90,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .hero-glow {
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(200,245,90,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-content { max-width: 900px; position: relative; z-index: 1; }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(200,245,90,0.3);
+      padding: 6px 14px;
+      border-radius: 2px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(52px, 8vw, 100px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -3px;
+      color: var(--white);
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 48px;
+      font-family: 'DM Mono', monospace;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0a0a0a;
+      padding: 14px 28px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+
+    .btn-primary:hover { background: #d4ff60; transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      padding: 14px 28px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* STATS BAR */
+    .stats {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      background: var(--surface);
+    }
+
+    .stat {
+      padding: 32px 40px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+
+    /* WHAT WE DO */
+    section { padding: 100px 40px; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 48px;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    .service-card {
+      background: var(--bg);
+      padding: 40px;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--accent);
+      transition: width 0.4s ease;
+    }
+
+    .service-card:hover { background: var(--surface); }
+    .service-card:hover::after { width: 100%; }
+
+    .service-num {
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .service-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .service-desc { color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+    /* PROCESS */
+    .process-section { background: var(--surface); }
+
+    .process-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 60px;
+      border: 1px solid var(--border);
+    }
+
+    .process-step {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .process-step:last-child { border-bottom: none; }
+    .process-step:hover { background: rgba(200,245,90,0.03); }
+
+    .step-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      padding: 32px 20px;
+    }
+
+    .step-content { padding: 32px 40px; }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .step-desc { color: var(--muted); font-size: 13px; }
+
+    /* CONTACT */
+    #contact { border-top: 1px solid var(--border); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .contact-info p { color: var(--muted); font-size: 15px; line-height: 1.9; margin-bottom: 32px; }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-item:last-child { border-bottom: 1px solid var(--border); }
+
+    .contact-label { font-size: 11px; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; width: 80px; flex-shrink: 0; }
+    .contact-value { color: var(--text); font-size: 14px; }
+
+    /* LEGAL SECTIONS */
+    .legal-section {
+      padding: 80px 40px;
+      border-top: 1px solid var(--border);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .legal-section h2 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .legal-date {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-bottom: 48px;
+    }
+
+    .legal-section h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 36px 0 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .legal-section p, .legal-section li {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.9;
+      margin-bottom: 12px;
+    }
+
+    .legal-section ul { padding-left: 20px; }
+    .legal-section ul li::marker { color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p { font-size: 12px; color: var(--muted); }
+
+    footer nav ul { display: flex; gap: 24px; }
+    footer nav ul li { list-style: none; }
+    footer nav ul a { font-size: 11px; color: var(--muted); text-decoration: none; letter-spacing: 1px; text-transform: uppercase; }
+    footer nav ul a:hover { color: var(--accent); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      nav ul { gap: 16px; }
+      .hero { padding: 100px 20px 60px; }
+      h1 { letter-spacing: -2px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stat { padding: 24px 20px; }
+      section { padding: 60px 20px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .process-step { grid-template-columns: 60px 1fr; }
+      footer { flex-direction: column; gap: 20px; text-align: center; }
+      .legal-section { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      TORONGO
+      <span>Digital Products</span>
+    </div>
+    <ul>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#tos">Legal</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Niche Web Products</div>
+      <h1>We Build<em>Utility Websites</em>That Sell.</h1>
+      <p class="hero-desc">
+        TORONGO designs, builds, and sells purpose-built niche utility tools for global markets — targeting buyers in US, UK, Australia, and Canada.
+      </p>
+      <div class="hero-cta">
+        <a href="#services" class="btn-primary">View Services</a>
+        <a href="#contact" class="btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats reveal">
+    <div class="stat">
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Tools Built</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Target Markets</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">13</div>
+      <div class="stat-label">Days Avg. Cycle</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">$700+</div>
+      <div class="stat-label">Per Site Revenue</div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <p class="section-label reveal">What We Do</p>
+    <h2 class="reveal">Niche Utility Websites<br/>Built for Real Buyers.</h2>
+    <p style="color:var(--muted);max-width:560px;line-height:1.9;" class="reveal">
+      We specialize in building lightweight, high-quality utility web products for specific professional niches — then selling them to operators and entrepreneurs globally.
+    </p>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <div class="service-num">01 —</div>
+        <div class="service-title">Freelancer Tools</div>
+        <div class="service-desc">Invoice generators, contract builders, rate calculators, and proposal tools built for independent professionals.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">02 —</div>
+        <div class="service-title">Finance & Tax Tools</div>
+        <div class="service-desc">Budget trackers, tax estimators, expense dashboards, and cash flow forecasters for SMEs and sole traders.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">03 —</div>
+        <div class="service-title">HR & Compliance</div>
+        <div class="service-desc">Employee handbook generators, job description builders, leave trackers, and IR35 status checkers.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">04 —</div>
+        <div class="service-title">Marketing Tools</div>
+        <div class="service-desc">Content calendars, email subject line testers, and landing page copy generators for digital marketers.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">05 —</div>
+        <div class="service-title">Operations Tools</div>
+        <div class="service-desc">SOP document builders, meeting agenda generators, and workflow tools for operations teams.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-num">06 —</div>
+        <div class="service-title">Custom Builds</div>
+        <div class="service-desc">Premium custom-built utility products tailored to specific niche requirements and buyer specifications.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process" class="process-section">
+    <p class="section-label reveal">How It Works</p>
+    <h2 class="reveal">From Idea to<br/>Live Product.</h2>
+
+    <div class="process-steps reveal">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <div class="step-title">Niche Research & Validation</div>
+          <div class="step-desc">We identify proven niches with verified buyer demand before committing to any build.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <div class="step-title">Design & Development</div>
+          <div class="step-desc">Each product is built to production quality — clean code, fast performance, mobile responsive.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <div class="step-title">Quality Gate Review</div>
+          <div class="step-desc">Every site passes a rigorous 25-point quality check before it goes to market. No exceptions.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <div class="step-title">Listing & Sale</div>
+          <div class="step-desc">Sites are listed on global marketplaces with complete documentation and traffic data packages.</div>
+        </div>
+      </div>
+      <div class="process-step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <div class="step-title">Clean Handover</div>
+          <div class="step-desc">Buyers receive full source code, deployment guides, and a defined handover checklist.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <p class="section-label">Contact</p>
+        <h2>Get In Touch.</h2>
+        <p>Interested in purchasing one of our products or have a question about our process? We respond within 1 business day.</p>
+        <div class="contact-item">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">hello@torongo.digital</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Based</span>
+          <span class="contact-value">Bangladesh</span>
+        </div>
+        <div class="contact-item">
+          <span class="contact-label">Markets</span>
+          <span class="contact-value">US · UK · AUS · Canada</span>
+        </div>
+      </div>
+      <div class="reveal" style="padding-top: 80px;">
+        <div style="border:1px solid var(--border); padding:40px; background:var(--surface);">
+          <p style="font-family:'Syne',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:12px;">Buyer Inquiries</p>
+          <p style="color:var(--muted); font-size:13px; line-height:1.9; margin-bottom:24px;">Looking to acquire a niche utility website? We maintain a portfolio of ready-to-transfer digital products. Contact us with your budget and preferred niche.</p>
+          <a href="mailto:hello@torongo.digital" class="btn-primary" style="display:inline-block;">Send Inquiry</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMS OF SERVICE -->
+  <div id="tos" class="legal-section">
+    <p class="section-label">Legal</p>
+    <h2>Terms of Service</h2>
+    <p class="legal-date">Last updated: May 2026</p>
+
+    <h3>1. Agreement</h3>
+    <p>By accessing or using TORONGO's website and services ("Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree, do not use our Services. These Terms apply to all visitors, users, and customers.</p>
+
+    <h3>2. Services Description</h3>
+    <p>TORONGO (operated by RT Trading) designs, builds, and sells niche utility web products. Our Services include the sale and transfer of digital products including websites, source code, templates, and associated licenses. All digital product sales are final upon execution of the transfer agreement unless otherwise stated in writing.</p>
+
+    <h3>3. Payments</h3>
+    <p>Payments for digital products are processed securely via Paddle (paddle.com), our authorized Merchant of Record. By completing a purchase, you agree to Paddle's Terms of Service and Privacy Policy. All prices are listed in USD unless otherwise stated. We reserve the right to update pricing at any time prior to a confirmed sale.</p>
+
+    <h3>4. Digital Product Transfers</h3>
+    <ul>
+      <li>All sales are final. Refunds are only provided if we are unable to complete the agreed handover within 14 business days of payment.</li>
+      <li>Buyer receives full source code, deployment documentation, and associated assets as described in each product listing.</li>
+      <li>Domain transfer, hosting migration, and DNS configuration support is included for 7 days post-sale.</li>
+      <li>We do not guarantee future revenue or traffic performance of any product sold.</li>
+    </ul>
+
+    <h3>5. Intellectual Property</h3>
+    <p>Upon full payment and completed transfer, the buyer receives full ownership of the purchased digital product including source code. TORONGO retains the right to use anonymized case study data from completed sales for marketing purposes. Template licenses sold as bundles grant a single-use commercial license to the buyer only — redistribution or resale of templates is prohibited.</p>
+
+    <h3>6. Prohibited Use</h3>
+    <ul>
+      <li>You may not use our website or products for any unlawful purpose.</li>
+      <li>You may not misrepresent yourself or your intended use of purchased products.</li>
+      <li>You may not use our products in any way that violates applicable laws in your jurisdiction.</li>
+    </ul>
+
+    <h3>7. Limitation of Liability</h3>
+    <p>TORONGO and RT Trading shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our Services or purchased digital products. Our total liability is limited to the amount paid for the specific product in question.</p>
+
+    <h3>8. Governing Law</h3>
+    <p>These Terms are governed by the laws of Bangladesh. Any disputes shall be resolved through good-faith negotiation. If resolution cannot be reached, disputes shall be submitted to binding arbitration in Dhaka, Bangladesh.</p>
+
+    <h3>9. Changes to Terms</h3>
+    <p>We reserve the right to update these Terms at any time. Continued use of our Services after changes constitutes acceptance of the updated Terms. We will notify active customers of material changes via email.</p>
+
+    <h3>10. Contact</h3>
+    <p>For questions regarding these Terms, contact us at: hello@torongo.digital</p>
+  </div>
+
+  <!-- PRIVACY POLICY -->
+  <div id="privacy" class="legal-section">
+    <p class="section-label">Legal</p>
+    <h2>Privacy Policy</h2>
+    <p class="legal-date">Last updated: May 2026</p>
+
+    <h3>1. Introduction</h3>
+    <p>TORONGO (operated by RT Trading, Narayanganj, Bangladesh) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website and Services.</p>
+
+    <h3>2. Information We Collect</h3>
+    <ul>
+      <li><strong style="color:var(--text)">Contact Information:</strong> Name and email address when you contact us.</li>
+      <li><strong style="color:var(--text)">Transaction Data:</strong> Purchase records and payment information processed by Paddle (we do not store card details).</li>
+      <li><strong style="color:var(--text)">Usage Data:</strong> Basic analytics via Google Analytics 4 (anonymized IP addresses).</li>
+      <li><strong style="color:var(--text)">Communications:</strong> Records of email correspondence with us.</li>
+    </ul>
+
+    <h3>3. How We Use Your Information</h3>
+    <ul>
+      <li>To fulfill digital product purchases and complete handovers.</li>
+      <li>To respond to inquiries and provide customer support.</li>
+      <li>To send transactional emails related to your purchase.</li>
+      <li>To analyze website traffic and improve our Services (anonymized data only).</li>
+      <li>To comply with legal obligations.</li>
+    </ul>
+
+    <h3>4. Payment Processing</h3>
+    <p>All payment processing is handled by Paddle.com, our Merchant of Record. We do not collect, store, or process credit card or payment details directly. Please review Paddle's Privacy Policy at paddle.com/legal/privacy for details on how they handle payment data.</p>
+
+    <h3>5. Data Sharing</h3>
+    <p>We do not sell, rent, or trade your personal information to third parties. We share data only with:</p>
+    <ul>
+      <li>Paddle (payment processing)</li>
+      <li>Google Analytics (anonymized website usage — opt-out available)</li>
+      <li>Email service providers for transactional communications</li>
+      <li>Legal authorities when required by applicable law</li>
+    </ul>
+
+    <h3>6. Data Retention</h3>
+    <p>We retain transaction records for 7 years as required by Bangladeshi tax law. Contact and communication data is retained for 3 years or until you request deletion. You may request deletion of your personal data at any time (subject to legal retention requirements) by emailing hello@torongo.digital.</p>
+
+    <h3>7. Cookies</h3>
+    <p>Our website uses minimal cookies — only those required for basic analytics (Google Analytics) and session functionality. No advertising or tracking cookies are used. You can disable cookies via your browser settings without affecting core site functionality.</p>
+
+    <h3>8. Your Rights</h3>
+    <p>You have the right to: access the personal data we hold about you; request correction of inaccurate data; request deletion of your data (subject to legal requirements); opt out of marketing communications at any time by emailing us.</p>
+
+    <h3>9. Security</h3>
+    <p>We implement appropriate technical measures to protect your personal information against unauthorized access, alteration, or disclosure. All data transmission is encrypted via HTTPS.</p>
+
+    <h3>10. Contact</h3>
+    <p>For any privacy-related questions or data requests, contact: hello@torongo.digital</p>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 TORONGO — RT Trading, Narayanganj, Bangladesh. All rights reserved.</p>
+    <nav>
+      <ul>
+        <li><a href="#tos">Terms</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
